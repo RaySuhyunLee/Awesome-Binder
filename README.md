@@ -29,7 +29,8 @@ With AwesomeBinder
 public class MyActivity extends Activity {
   public void onCreate(...) {
     binder = AwesomeBinder.bind(this, R.layout.simple)
-        .set("{'button':'I', 'textView':'Really', 'editText': 'Like', 'checkBox': 'This'}");
+        .set("{'button':'I', 'textView':'Really',
+            'editText': 'Like', 'checkBox': 'This'}");
   }
 }
 ```
