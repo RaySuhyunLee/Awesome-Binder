@@ -34,3 +34,12 @@ public class MyActivity extends Activity {
   }
 }
 ```
+
+##Contribution
+Feel free to fork. 
+
+##Licenses
+I'm considering which license to use.
+
+##Special Thanks To
+[Two-way Android Data Binding](https://medium.com/@fabioCollini/android-data-binding-f9f9d3afc761#.8w9rk69sf)
