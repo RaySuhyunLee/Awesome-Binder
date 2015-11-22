@@ -42,4 +42,6 @@ Feel free to fork.
 I'm considering which license to use.
 
 ##Special Thanks To
+[Data Binding Guide](http://developer.android.com/intl/ko/tools/data-binding/guide.html)
 [Two-way Android Data Binding](https://medium.com/@fabioCollini/android-data-binding-f9f9d3afc761#.8w9rk69sf)
+[StackOverflow](http://stackoverflow.com/questions/4685563/how-to-pass-a-function-as-a-parameter-in-java)
