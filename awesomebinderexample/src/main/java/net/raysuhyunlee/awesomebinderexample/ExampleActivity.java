@@ -15,7 +15,5 @@ public class ExampleActivity extends Activity {
         super.onCreate(savedInstanceState);
         AwesomeData data = new AwesomeData();
         data.set("text", "blabla");
-        new AwesomeBinder().bind(this, R.layout.activity_example)
-                .set(BR.data, data);
     }
 }

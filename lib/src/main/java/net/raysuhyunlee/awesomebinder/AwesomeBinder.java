@@ -14,7 +14,6 @@ import org.json.simple.JSONValue;
  */
 
 public class AwesomeBinder {
-    protected JSONObject data;
     ViewDataBinding binding;
 
     public AwesomeBinder() {
@@ -22,15 +21,11 @@ public class AwesomeBinder {
     }
 
     public AwesomeBinder setContentView(Activity activity, int layoutId) {
-        binding = DataBindingUtil.setContentView(activity, layoutId);
+        activity.setContentView(layoutId);
         return this;
     }
 
-    public AwesomeBinder bind(int variableId, AwesomeData data) {
-        binding.setVariable(variableId, data);
-        return this;
-    }
-
+    /*
     @BindingAdapter("awesome:bind")
     public static void setTextView(TextView view, final BindableString bindableString) {
         if (view.getTag(R.id.binded) == null) {
@@ -46,5 +41,5 @@ public class AwesomeBinder {
         if (!view.getText().equals(newValue)) {
             view.setText(newValue);
         }
-    }
+    }*/
 }
