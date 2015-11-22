@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:awesome="http://schemas.android.com/apk/net.raysuhyunlee.awesomebinder">
+    <data>
+        <import
+            type="net.raysuhyunlee.awesomebinder.BindableString" />
+        <variable
+            name="data"
+            type="net.raysuhyunlee.awesomebinder.AwesomeData" />
+    </data>
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            awesome:bind="@{data.get(`text`)}"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            awesome:bind='@{data.get("text")}'/>
+
+    </LinearLayout>
+</layout>
