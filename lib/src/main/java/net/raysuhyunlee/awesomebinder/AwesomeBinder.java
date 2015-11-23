@@ -26,11 +26,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class AwesomeBinder {
     protected ViewMap viewMap;
-    protected AwesomeData valueMap;
+    protected JSONObject valueMap;
 
     public AwesomeBinder() {
         viewMap = new ViewMap();
-        valueMap = new AwesomeData();
+        valueMap = new JSONObject();
     }
 
     public AwesomeBinder setContentView(Activity activity, int layoutId) {
@@ -61,14 +61,14 @@ public class AwesomeBinder {
                             View v = activity.findViewById(id);
                             viewMap.put(bind, v);
                             if(valueMap.get(key) == null) {
-                                valueMap.set(key, "");
+                                valueMap.put(key, "");
                             }
                             if(v instanceof TextView) {
                                 ((TextView) v).addTextChangedListener(new BaseTextWatcher() {
                                     @Override
                                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                        if(!valueMap.get(key).get().equals(s.toString())) {
-                                            valueMap.set(key, s.toString());
+                                        if(!valueMap.get(key).equals(s.toString())) {
+                                            valueMap.put(key, s.toString());
                                             updateViews(key);
                                         }
                                     }
@@ -92,7 +92,7 @@ public class AwesomeBinder {
 
     private void updateViews(String key) {
         ArrayList<View> viewList = viewMap.getAll(key);
-        String value = valueMap.get(key).get();
+        String value = (String)valueMap.get(key);
         for (View v : viewList) {
             if (v instanceof TextView) {
                 ((TextView)v).setText(value);
@@ -115,7 +115,7 @@ public class AwesomeBinder {
     }
 
     public void setValue(String key, String value) {
-        valueMap.set(key, value);
+        valueMap.put(key, value);
         updateViews(key);
     }
 
