@@ -1,5 +1,5 @@
 #Awesome Binder for Android
-"Android UI Programming has never been this easy!"
+*"Android UI Programming has never been this easy!"*
 
 ##What is it?
 AwesomeBinder is a two-way databinding library that supports observables. It is aimed to present an AngularJS-like experience to Android Developers.  
@@ -29,11 +29,11 @@ public class MyActivity extends Activity {
   <Button ...
     android:id="@+id/button" />
   <TextView ...
-    android:id="@+id/textView />
+    android:id="@+id/textView" />
   <EditText ...
-    android:id="@+id/editText />
+    android:id="@+id/editText" />
   <CheckBox ...
-    android:id="@+id/checkBox />
+    android:id="@+id/checkBox" />
 </LinearLayout>
 ```
 
@@ -70,6 +70,6 @@ Feel free to fork.
 I'm considering which license to use.
 
 ##Special Thanks To
-[Data Binding Guide](http://developer.android.com/intl/ko/tools/data-binding/guide.html)
-[Two-way Android Data Binding](https://medium.com/@fabioCollini/android-data-binding-f9f9d3afc761#.8w9rk69sf)
-[StackOverflow](http://stackoverflow.com/questions/4685563/how-to-pass-a-function-as-a-parameter-in-java)
+[Data Binding Guide](http://developer.android.com/intl/ko/tools/data-binding/guide.html)  
+[Two-way Android Data Binding](https://medium.com/@fabioCollini/android-data-binding-f9f9d3afc761#.8w9rk69sf)  
+[StackOverflow](http://stackoverflow.com/questions/4685563/how-to-pass-a-function-as-a-parameter-in-java)  
