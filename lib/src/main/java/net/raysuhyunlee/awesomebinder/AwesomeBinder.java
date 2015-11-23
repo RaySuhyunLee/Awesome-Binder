@@ -27,13 +27,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AwesomeBinder {
     protected ViewMap viewMap;
     protected JSONObject valueMap;
+    protected Activity activity;
 
-    public AwesomeBinder() {
+    public AwesomeBinder(Activity activity) {
+        this.activity = activity;
         viewMap = new ViewMap();
         valueMap = new JSONObject();
     }
 
-    public AwesomeBinder setContentView(Activity activity, int layoutId) {
+    public AwesomeBinder setContentView(int layoutId) {
         activity.setContentView(layoutId);
 
         XmlResourceParser parser = activity.getResources().getLayout(layoutId);
@@ -42,8 +44,6 @@ public class AwesomeBinder {
             int eventType = parser.getEventType();
             while(eventType != XmlPullParser.END_DOCUMENT) {
                 switch(eventType) {
-                    case XmlPullParser.START_DOCUMENT:
-                        break;
                     case XmlPullParser.START_TAG:
                         int attrCount = parser.getAttributeCount();
                         String bind = null;
@@ -56,25 +56,7 @@ public class AwesomeBinder {
                                 id = parser.getAttributeResourceValue(i, 0);
                             }
                         }
-                        if (bind != null) {
-                            final String key = bind;
-                            View v = activity.findViewById(id);
-                            viewMap.put(bind, v);
-                            if(valueMap.get(key) == null) {
-                                valueMap.put(key, "");
-                            }
-                            if(v instanceof TextView) {
-                                ((TextView) v).addTextChangedListener(new BaseTextWatcher() {
-                                    @Override
-                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                        if(!valueMap.get(key).equals(s.toString())) {
-                                            valueMap.put(key, s.toString());
-                                            updateViews(key);
-                                        }
-                                    }
-                                });
-                            }
-                        }
+                        bindView(id, bind);
                         break;
                     case XmlPullParser.END_TAG:
                         break;
@@ -90,50 +72,45 @@ public class AwesomeBinder {
         return this;
     }
 
+    private void bindView(final int id, final String key) {
+        if (key != null) {
+            View view = activity.findViewById(id);
+            viewMap.put(key, view);
+            if(valueMap.get(key) == null) {
+                valueMap.put(key, "");
+            }
+
+            // attach value change event listener
+            if(view instanceof TextView) {
+                ((TextView) view).addTextChangedListener(new BaseTextWatcher() {
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if(!valueMap.get(key).equals(s.toString())) {
+                            valueMap.put(key, s.toString());
+                            updateViews(key);
+                        }
+                    }
+                });
+            }
+        }
+    }
+
     private void updateViews(String key) {
         ArrayList<View> viewList = viewMap.getAll(key);
         String value = (String)valueMap.get(key);
         for (View v : viewList) {
-            if (v instanceof TextView) {
+            if (v instanceof TextView &&
+                    !(((TextView)v).getText().toString().equals(value))) {
                 ((TextView)v).setText(value);
             }
         }
     }
 
-    // code from View class(API version >= 17)
-    private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
-    public static int generateViewId() {
-        for (;;) {
-            final int result = sNextGeneratedId.get();
-            // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
-            int newValue = result + 1;
-            if (newValue > 0x00FFFFFF) newValue = 1; // Roll over to 1, not 0.
-            if (sNextGeneratedId.compareAndSet(result, newValue)) {
-                return result;
-            }
-        }
+    private void updateAll() {
     }
 
     public void setValue(String key, String value) {
         valueMap.put(key, value);
         updateViews(key);
     }
-
-    /*
-    @BindingAdapter("awesome:bind")
-    public static void setTextView(TextView view, final BindableString bindableString) {
-        if (view.getTag(R.id.binded) == null) {
-            view.setTag(R.id.binded, true);
-            view.addTextChangedListener(new BaseTextWatcher() {
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    bindableString.set(s.toString());
-                }
-            });
-        }
-        String newValue = bindableString.get();
-        if (!view.getText().equals(newValue)) {
-            view.setText(newValue);
-        }
-    }*/
 }
