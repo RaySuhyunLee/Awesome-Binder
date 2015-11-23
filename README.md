@@ -1,8 +1,14 @@
 #Awesome Binder for Android
-*"Android UI Programming has never been this easy!"*
+*"Android UI Programming has never been this easy!"*  
+*"No pain, Yes gain"*
 
 ##What is it?
-AwesomeBinder is a two-way databinding library that supports observables. It is aimed to present an AngularJS-like experience to Android Developers.  
+AwesomeBinder is a two-way databinding library that supports observables. It is aimed to present an AngularJS-like experience to Android Developers. In other words, you can create a fully reactive layout without painful, annoying Java UI coding.
+
+##What does it do?
+AwesomeBinder does many things, and that's why it is AWESOME.
+
+###1. Data Binding In One Line
 
 **With Vanilla Android**  
 ```Java
@@ -50,7 +56,7 @@ public class MyActivity extends Activity {
 ```
 
 ```xml
-<!-- simple.xml --->
+<!-- simple.xml -->
 <LinearLayout ...>
   <Button ...
     app:bind="str1" />
@@ -62,6 +68,19 @@ public class MyActivity extends Activity {
     app:bind="str4" />
 </LinearLayout>
 ```
+
+###2. Reactive UI  
+```xml
+<!-- reactive.xml -->
+<LinearLayout ...>
+  <EditText ...
+    app:bind="input" />
+  <TextView ...
+    app:bind="input" />
+</LinearLayout>
+```
+
+###3. Function Injection
 
 ##Contribution
 Feel free to fork. 
