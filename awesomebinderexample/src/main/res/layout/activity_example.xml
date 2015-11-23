@@ -6,12 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <EditText
-        android:id="@+id/a"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:bind="hello"/>
     <TextView
-        android:id="@+id/b"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:bind="hello"/>
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:bind="hello"/>

@@ -12,7 +12,7 @@ public class ExampleActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AwesomeBinder binder = new AwesomeBinder(this);
-        binder.setContentView(R.layout.activity_example);
+        AwesomeBinder binder = new AwesomeBinder();
+        binder.setContentView(this, R.layout.activity_example);
     }
 }
