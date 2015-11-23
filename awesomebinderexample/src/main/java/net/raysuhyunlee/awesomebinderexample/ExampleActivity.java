@@ -2,6 +2,7 @@ package net.raysuhyunlee.awesomebinderexample;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 
 import net.raysuhyunlee.awesomebinder.AwesomeBinder;
 import net.raysuhyunlee.awesomebinder.AwesomeData;
@@ -13,7 +14,8 @@ public class ExampleActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AwesomeData data = new AwesomeData();
-        data.set("text", "blabla");
+        AwesomeBinder binder = new AwesomeBinder();
+        binder.setContentView(this, R.layout.activity_example);
+        //binder.setValue("hello", "blabla");
     }
 }
