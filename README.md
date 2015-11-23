@@ -1,13 +1,12 @@
 #Awesome Binder for Android
-A super-simple Android UI binder that makes your fingers happy
-
->"Android UI Programming has never been this easy!" - Anonymous Developer
+"Android UI Programming has never been this easy!"
 
 ##What is it?
 AwesomeBinder is a two-way databinding library that supports observables. It is aimed to present an AngularJS-like experience to Android Developers.  
 
-With Vanilla Android
+**With Vanilla Android**  
 ```Java
+// MyActivity.java
 public class MyActivity extends Activity {
   ...
   public void onCreate(...) {
@@ -24,15 +23,44 @@ public class MyActivity extends Activity {
 }
 ```
 
-With AwesomeBinder
+```xml
+<!-- simple.xml -->
+<LinearLayout ...>
+  <Button ...
+    android:id="@+id/button" />
+  <TextView ...
+    android:id="@+id/textView />
+  <EditText ...
+    android:id="@+id/editText />
+  <CheckBox ...
+    android:id="@+id/checkBox />
+</LinearLayout>
+```
+
+**With AwesomeBinder**  
 ```Java
+// MyActivity.java
 public class MyActivity extends Activity {
   public void onCreate(...) {
     binder = AwesomeBinder.bind(this, R.layout.simple)
-        .set("{'button':'I', 'textView':'Really',
-            'editText': 'Like', 'checkBox': 'This'}");
+        .set("{'str1':'This', 'str2':'Is',
+            'str3': 'Much', 'str4': 'Better'}");
   }
 }
+```
+
+```xml
+<!-- simple.xml --->
+<LinearLayout ...>
+  <Button ...
+    app:bind="str1" />
+  <TextView ...
+    app:bind="str2" />
+  <EditText ...
+    app:bind="str3" />
+  <CheckBox ...
+    app:bind="str4" />
+</LinearLayout>
 ```
 
 ##Contribution
