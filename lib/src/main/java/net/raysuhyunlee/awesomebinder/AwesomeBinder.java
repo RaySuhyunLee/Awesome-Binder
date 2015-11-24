@@ -3,37 +3,29 @@ package net.raysuhyunlee.awesomebinder;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
-import android.databinding.BindingAdapter;
-import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by SuhyunLee on 2015. 11. 19..
  */
 
 public class AwesomeBinder {
-    protected ViewMap viewMap;
+    protected ListMap<View> viewMap;
     protected JSONObject valueMap;
 
     public AwesomeBinder() {
-        viewMap = new ViewMap();
+        viewMap = new ListMap();
         valueMap = new JSONObject();
     }
 
@@ -117,7 +109,7 @@ public class AwesomeBinder {
     }
 
     private void updateViews(String key) {
-        ArrayList<View> viewList = viewMap.getAll(key);
+        List<View> viewList = viewMap.getAll(key);
         String value = (String)valueMap.get(key);
         for (View v : viewList) {
             if (v instanceof TextView &&
