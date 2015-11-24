@@ -1,3 +1,5 @@
+**NOTE Current in development. If you are curious, you can use code in development branch issue/#1. Thanks!**
+
 #Awesome Binder for Android
 *"Android UI Programming has never been this easy!"*  
 *"No pain, Yes gain"*
