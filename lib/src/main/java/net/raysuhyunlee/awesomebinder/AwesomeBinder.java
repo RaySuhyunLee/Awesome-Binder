@@ -23,6 +23,7 @@ import java.util.List;
 public class AwesomeBinder {
     protected ListMap<View> viewMap;
     protected JSONObject valueMap;
+    protected ListMap<Runnable> functionMap;
 
     public AwesomeBinder() {
         viewMap = new ListMap();
@@ -124,6 +125,11 @@ public class AwesomeBinder {
 
     public void setValue(String key, String value) {
         valueMap.put(key, value);
+        updateViews(key);
+    }
+
+    public void setFunction(String key, Runnable runnable) {
+        functionMap.put(key, runnable);
         updateViews(key);
     }
 }
