@@ -23,7 +23,7 @@ import java.util.List;
 public class AwesomeBinder {
     protected ListMap<View> modelViewMap;
     protected ListMap<View> contentViewMap;
-    protected JSONObject valueMap;
+    protected JSONObject valueMap;  // FIXME It should not be a JSONObject. It should be a map.
     protected ListMap<Runnable> functionMap;
 
     public AwesomeBinder() {
@@ -38,69 +38,7 @@ public class AwesomeBinder {
         View contentView = inflater.inflate(layoutId, null, false);
         activity.setContentView(contentView);
 
-        XmlResourceParser parser = activity.getResources().getLayout(layoutId);
-        View currentView = null; // view reference for mapping views with its xml tags
-        int depth = -1;
-        List<Integer> countList = new ArrayList<>();
-        try {
-            parser.next();
-            int eventType = parser.getEventType();
-            while(eventType != XmlPullParser.END_DOCUMENT) {
-                switch(eventType) {
-                    case XmlPullParser.START_TAG:
-                        // initialize or increase child index count
-                        depth++;
-                        if (countList.size() - 1 < depth)
-                            countList.add(0);
-                        else
-                            countList.set(depth, countList.get(depth) + 1);
-
-                        // get view corresponding to current xml tag
-                        if (currentView == null)
-                            currentView = contentView;
-                        else {
-                            currentView = ((ViewGroup)currentView).getChildAt(countList.get(depth));
-                        }
-
-                        // get model or content attr
-                        int attrCount = parser.getAttributeCount();
-                        String model = null, content = null;
-                        for (int i=0; i< attrCount; i++) {
-                            String attrName = parser.getAttributeName(i);
-                            if (attrName.equals("model")) { // FIXME hardcoded attribute name. fix if possible
-                                model = parser.getAttributeValue(i);
-                            } else if (attrName.equals("content")) {
-                                content = parser.getAttributeValue(i);
-                            }
-                        }
-                        if (model != null) {
-                            modelViewMap.put(model, currentView);
-                            if (valueMap.get(model) == null) {
-                                valueMap.put(model, "");
-                            }
-                            attachListener(currentView, model);
-                        } else if (content != null) {
-                            contentViewMap.put(content, currentView);
-                            if (valueMap.get(content) == null) {
-                                valueMap.put(content, "");
-                            }
-                        }
-                        break;
-                    case XmlPullParser.END_TAG:
-                        if (countList.size() - 1 > depth)
-                            countList.remove(depth + 1);
-                        depth--;
-                        currentView = (View)currentView.getParent();
-                        break;
-                }
-                eventType = parser.next();
-            }
-        } catch(XmlPullParserException e) {
-            e.printStackTrace();
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
-        parser.close();
+        parse(activity, layoutId, contentView);
         return this;
     }
 
@@ -141,5 +79,70 @@ public class AwesomeBinder {
     public void setFunction(String key, Runnable runnable) {
         functionMap.put(key, runnable);
         updateViews(key);
+    }
+
+    private void parse(Context context, int layoutId, View rootView) {
+        XmlResourceParser parser = context.getResources().getLayout(layoutId);
+        View currentView = null; // view reference for mapping views with its xml tags
+        int depth = -1;
+        List<Integer> countList = new ArrayList<>();
+        try {
+            parser.next();
+            int eventType = parser.getEventType();
+            while(eventType != XmlPullParser.END_DOCUMENT) {
+                switch(eventType) {
+                    case XmlPullParser.START_TAG:
+                        // initialize or increase child index count
+                        depth++;
+                        if (countList.size() - 1 < depth)
+                            countList.add(0);
+                        else
+                            countList.set(depth, countList.get(depth) + 1);
+
+                        // get view corresponding to current xml tag
+                        if (currentView == null)
+                            currentView = rootView;
+                        else {
+                            currentView = ((ViewGroup)currentView).getChildAt(countList.get(depth));
+                        }
+
+                        // get model or content attr
+                        int attrCount = parser.getAttributeCount();
+
+                        for (int i=0; i< attrCount; i++) {
+                            String attrName = parser.getAttributeName(i);
+                            if (attrName.equals("model")) { // FIXME hardcoded attribute name. fix if possible
+                                String model = parser.getAttributeValue(i);
+                                modelViewMap.put(model, currentView);
+                                if (valueMap.get(model) == null) {
+                                    valueMap.put(model, "");
+                                }
+                                attachListener(currentView, model);
+                                break;
+                            } else if (attrName.equals("content")) {
+                                String content = parser.getAttributeValue(i);
+                                contentViewMap.put(content, currentView);
+                                if (valueMap.get(content) == null) {
+                                    valueMap.put(content, "");
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    case XmlPullParser.END_TAG:
+                        if (countList.size() - 1 > depth)
+                            countList.remove(depth + 1);
+                        depth--;
+                        currentView = (View)currentView.getParent();
+                        break;
+                }
+                eventType = parser.next();
+            }
+        } catch(XmlPullParserException e) {
+            e.printStackTrace();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        parser.close();
     }
 }
