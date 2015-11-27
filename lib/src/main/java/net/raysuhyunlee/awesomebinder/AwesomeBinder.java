@@ -21,20 +21,22 @@ import java.util.List;
  */
 
 public class AwesomeBinder {
-    protected ListMap<View> viewMap;
+    protected ListMap<View> modelViewMap;
+    protected ListMap<View> contentViewMap;
     protected JSONObject valueMap;
     protected ListMap<Runnable> functionMap;
 
     public AwesomeBinder() {
-        viewMap = new ListMap();
+        modelViewMap = new ListMap<>();
+        contentViewMap = new ListMap<>();
         valueMap = new JSONObject();
     }
 
     public AwesomeBinder setContentView(Activity activity, int layoutId) {
         LayoutInflater inflater = (LayoutInflater)activity
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View content = inflater.inflate(layoutId, null, false);
-        activity.setContentView(content);
+        View contentView = inflater.inflate(layoutId, null, false);
+        activity.setContentView(contentView);
 
         XmlResourceParser parser = activity.getResources().getLayout(layoutId);
         View currentView = null; // view reference for mapping views with its xml tags
@@ -55,26 +57,34 @@ public class AwesomeBinder {
 
                         // get view corresponding to current xml tag
                         if (currentView == null)
-                            currentView = content;
+                            currentView = contentView;
                         else {
                             currentView = ((ViewGroup)currentView).getChildAt(countList.get(depth));
                         }
 
-                        // get bind value
+                        // get model or content attr
                         int attrCount = parser.getAttributeCount();
-                        String bind = null;
+                        String model = null, content = null;
                         for (int i=0; i< attrCount; i++) {
                             String attrName = parser.getAttributeName(i);
-                            if (attrName.equals("bind")) { // FIXME hardcoded attribute name. fix if possible
-                                bind = parser.getAttributeValue(i);
+                            if (attrName.equals("model")) { // FIXME hardcoded attribute name. fix if possible
+                                model = parser.getAttributeValue(i);
+                            } else if (attrName.equals("content")) {
+                                content = parser.getAttributeValue(i);
                             }
                         }
-                        if (bind == null) break;
-                        viewMap.put(bind, currentView);
-                        if(valueMap.get(bind) == null) {
-                            valueMap.put(bind, "");
+                        if (model != null) {
+                            modelViewMap.put(model, currentView);
+                            if (valueMap.get(model) == null) {
+                                valueMap.put(model, "");
+                            }
+                            attachListener(currentView, model);
+                        } else if (content != null) {
+                            contentViewMap.put(content, currentView);
+                            if (valueMap.get(content) == null) {
+                                valueMap.put(content, "");
+                            }
                         }
-                        attachListener(currentView, bind);
                         break;
                     case XmlPullParser.END_TAG:
                         if (countList.size() - 1 > depth)
@@ -110,7 +120,7 @@ public class AwesomeBinder {
     }
 
     private void updateViews(String key) {
-        List<View> viewList = viewMap.getAll(key);
+        List<View> viewList = contentViewMap.getAll(key);
         String value = (String)valueMap.get(key);
         for (View v : viewList) {
             if (v instanceof TextView &&
