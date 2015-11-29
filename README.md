@@ -1,4 +1,4 @@
-**NOTE Current in development. If you are curious, you can use code in development branch issue/#1. Thanks!**
+**NOTE Current in development. If you are curious, you can use code in development branch issue/#1. Thanks!**  
 **Function Binding Comming Soon!**
 
 #Awesome Binder for Android
