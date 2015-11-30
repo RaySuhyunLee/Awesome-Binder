@@ -8,14 +8,10 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:model="hello"/>
+        app:model="name"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:content="hello"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:content="isValid()"/>
+        app:content="greet()"/>
 
 </LinearLayout>

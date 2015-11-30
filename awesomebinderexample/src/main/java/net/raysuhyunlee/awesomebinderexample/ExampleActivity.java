@@ -17,11 +17,7 @@ public class ExampleActivity extends Activity {
         binder.setContentView(this, R.layout.activity_example);
     }
 
-    public String isValid() {
-        if (binder.getValue("hello").equals("hello")) {
-            return "true";
-        } else {
-            return "false";
-        }
+    public String greet() {
+        return "Hello, " + (String)binder.getValue("name");
     }
 }

@@ -91,6 +91,7 @@ public class AwesomeBinder {
             callFunctions();
             value = (String) valueMap.get(key);
         }
+        if (contentViewList == null) return;
         for (View v : contentViewList) {
             if (v instanceof TextView &&
                     !(((TextView)v).getText().toString().equals(value))) {
