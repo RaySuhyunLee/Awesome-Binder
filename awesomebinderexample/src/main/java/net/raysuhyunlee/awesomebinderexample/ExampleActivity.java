@@ -9,10 +9,15 @@ import net.raysuhyunlee.awesomebinder.AwesomeBinder;
  * Created by SuhyunLee on 2015. 11. 19..
  */
 public class ExampleActivity extends Activity {
+    AwesomeBinder binder;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AwesomeBinder binder = new AwesomeBinder();
+        binder = new AwesomeBinder();
         binder.setContentView(this, R.layout.activity_example);
+    }
+
+    public String greet() {
+        return "Hello, " + (String)binder.getValue("name");
     }
 }

@@ -1,8 +1,10 @@
 package net.raysuhyunlee.awesomebinder;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +15,14 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by SuhyunLee on 2015. 11. 19..
@@ -24,15 +32,18 @@ public class AwesomeBinder {
     protected ListMap<View> modelViewMap;
     protected ListMap<View> contentViewMap;
     protected JSONObject valueMap;  // FIXME It should not be a JSONObject. It should be a map.
-    protected ListMap<Runnable> functionMap;
+    protected Map<String, String> functionMap;
+    private Context context;
 
     public AwesomeBinder() {
         modelViewMap = new ListMap<>();
         contentViewMap = new ListMap<>();
         valueMap = new JSONObject();
+        functionMap = new HashMap<>();
     }
 
     public AwesomeBinder setContentView(Activity activity, int layoutId) {
+        context = activity;
         LayoutInflater inflater = (LayoutInflater)activity
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(layoutId, null, false);
@@ -58,13 +69,41 @@ public class AwesomeBinder {
     }
 
     private void updateViews(String key) {
-        List<View> viewList = contentViewMap.getAll(key);
-        String value = (String)valueMap.get(key);
-        for (View v : viewList) {
+        List<View> contentViewList = contentViewMap.getAll(key);
+        Pattern pattern = Pattern.compile(".+[(][)]");
+        String value = "";
+        if (pattern.matcher(key).matches()) {
+            try {
+                String methodName = key.substring(0, key.length() - 2);
+                value = (String)context.getClass().getMethod(methodName).invoke(context);
+            }catch (SecurityException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        } else {
+            callFunctions();
+            value = (String) valueMap.get(key);
+        }
+        if (contentViewList == null) return;
+        for (View v : contentViewList) {
             if (v instanceof TextView &&
                     !(((TextView)v).getText().toString().equals(value))) {
                 ((TextView)v).setText(value);
             }
+        }
+    }
+
+    private void callFunctions() {
+        Set<String> keys = functionMap.keySet();
+        for (String key : keys) {
+            updateViews(key);
         }
     }
 
@@ -76,9 +115,8 @@ public class AwesomeBinder {
         updateViews(key);
     }
 
-    public void setFunction(String key, Runnable runnable) {
-        functionMap.put(key, runnable);
-        updateViews(key);
+    public Object getValue(String key) {
+        return valueMap.get(key);
     }
 
     private void parse(Context context, int layoutId, View rootView) {
@@ -122,7 +160,12 @@ public class AwesomeBinder {
                             } else if (attrName.equals("content")) {
                                 String content = parser.getAttributeValue(i);
                                 contentViewMap.put(content, currentView);
-                                if (valueMap.get(content) == null) {
+
+                                // check if is a function
+                                Pattern pattern = Pattern.compile(".+[(][)]");
+                                if (pattern.matcher(content).matches()) {
+                                    functionMap.put(content, "");
+                                } else if (valueMap.get(content) == null) {
                                     valueMap.put(content, "");
                                 }
                                 break;

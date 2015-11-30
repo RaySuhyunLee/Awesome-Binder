@@ -5,6 +5,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by SuhyunLee on 2015. 11. 23..
@@ -28,5 +29,9 @@ public class ListMap<T> {
 
     public T get(String key, int index) {
         return map.get(key).get(index);
+    }
+
+    public Set<String> getKeys() {
+        return map.keySet();
     }
 }
