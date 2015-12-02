@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.json.simple.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -31,14 +34,14 @@ import java.util.regex.Pattern;
 public class AwesomeBinder {
     protected ListMap<View> modelViewMap;
     protected ListMap<View> contentViewMap;
-    protected JSONObject valueMap;  // FIXME It should not be a JSONObject. It should be a map.
+    protected Map<String, Object> valueMap;
     protected Map<String, String> functionMap;
     private Context context;
 
     public AwesomeBinder() {
         modelViewMap = new ListMap<>();
         contentViewMap = new ListMap<>();
-        valueMap = new JSONObject();
+        valueMap = new HashMap<>();
         functionMap = new HashMap<>();
     }
 
@@ -110,12 +113,22 @@ public class AwesomeBinder {
     private void updateAll() {
     }
 
-    public void setValue(String key, String value) {
+    public void set(String JSONString) {
+        Map<String, Object> map = new Gson().fromJson(JSONString,
+                new TypeToken<HashMap<String, Object>>() {
+                }.getType());
+        valueMap.putAll(map);
+        for(String key : map.keySet()) {
+            updateViews(key);
+        }
+    }
+
+    public void set(String key, String value) {
         valueMap.put(key, value);
         updateViews(key);
     }
 
-    public Object getValue(String key) {
+    public Object get(String key) {
         return valueMap.get(key);
     }
 
