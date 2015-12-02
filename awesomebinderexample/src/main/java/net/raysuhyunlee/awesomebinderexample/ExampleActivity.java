@@ -15,9 +15,10 @@ public class ExampleActivity extends Activity {
         super.onCreate(savedInstanceState);
         binder = new AwesomeBinder();
         binder.setContentView(this, R.layout.activity_example);
+        binder.set("{name: 'blabla'}");
     }
 
     public String greet() {
-        return "Hello, " + (String)binder.getValue("name");
+        return "Hello, " + (String)binder.get("name");
     }
 }
